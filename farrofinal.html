@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Farro - Modern European, Refined. A luxury dining experience in Koregaon Park, Pune.">
+    <title>FARRO | Modern European, Refined</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+    <!-- Google Fonts: Playfair Display (Headings) & Inter (Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- ... [Styles remain exactly the same as V16] ... -->
+    <style>
+        /* ... [Previous CSS Content] ... */
+        :root {
+            /* Color System */
+            --bg: #0B0B0C;            /* Deep Charcoal Page Background */
+            --bg-elev: #131416;       /* Elevated Surfaces / Cards */
+            --text: #F2F2F2;          /* Primary Text */
+            --muted: #BDBDBF;         /* Secondary/Meta Text */
+            --accent: #D4AF37;        /* Primary Gold */
+            --accent-2: #C6912E;      /* Hover Gold */
+            --danger: #E85C5C;        /* Error/Validation */
+            --success: #56C288;       /* Success */
+            --border: #2A2B2E;        /* Subtle Borders */
+            --overlay: rgba(0,0,0,0.6); /* Image Overlays */
+            --ring: rgba(212,175,55,0.28); /* Focus Rings */
+
+            /* Typography Scale (Fluid Clamps) */
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+            
+            --fs-hero: clamp(2.8rem, 5vw + 1rem, 5.6rem);
+            --fs-h1: clamp(2.2rem, 2.8vw + 1rem, 3.8rem);
+            --fs-h2: clamp(1.6rem, 1.8vw + 0.9rem, 2.4rem);
+            --fs-h3: clamp(1.4rem, 1.2vw + 0.5rem, 1.8rem);
+            --fs-body: clamp(1rem, 0.35vw + 0.85rem, 1.125rem);
+            --fs-small: 0.875rem;
+
+            /* Spacing & Rhythm */
+            --section-padding: clamp(60px, 8vw, 120px);
+            --gutter: clamp(24px, 4vw, 32px);
+            --radius-card: 12px;
+            --radius-btn: 4px;
+        }
+
+        /* Base Reset */
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: var(--fs-body);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            opacity: 0; /* Start hidden */
+            transition: opacity 1s ease; /* Smooth fade in */
+        }
+        
+        /* Visible state class */
+        body.loaded {
+            opacity: 1;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: var(--font-heading);
+            color: var(--text);
+            line-height: 1.15;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+        }
+
+        /* ========================
+           B. MOTION & INTERACTIVITY
+           ======================== */
+
+        /* 1. Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            will-change: opacity, transform;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Staggered Children Reveal */
+        .reveal-stagger > * {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .reveal-stagger.active > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-stagger.active > *:nth-child(1) { transition-delay: 0.1s; }
+        .reveal-stagger.active > *:nth-child(2) { transition-delay: 0.2s; }
+        .reveal-stagger.active > *:nth-child(3) { transition-delay: 0.3s; }
+        .reveal-stagger.active > *:nth-child(4) { transition-delay: 0.4s; }
+
+        /* 2. Micro-Hovers */
+        .card-hover {
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease, border-color 0.3s ease;
+            border: 1px solid var(--border);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 12px 40px -10px rgba(0,0,0,0.5);
+            border-color: var(--accent);
+        }
+
+        /* 3. Buttons & CTAs */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--accent);
+            color: #050505;
+            font-weight: 600;
+            padding: 1.1rem 2.8rem;
+            border-radius: var(--radius-btn);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--accent-2);
+            z-index: -1;
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform: scaleX(0);
+            transform-origin: right;
+        }
+        .btn-primary:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-weight: 500;
+            padding: 1.1rem 2.8rem;
+            border-radius: var(--radius-btn);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+        .btn-outline:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        /* 4. Ambient Background Particles */
+        .particles-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: float 25s infinite linear;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            20% { opacity: 0.15; }
+            80% { opacity: 0.15; }
+            100% { transform: translateY(-100vh) translateX(40px); opacity: 0; }
+        }
+
+        /* 5. Form Inputs (Floating Labels) */
+        .input-group { position: relative; margin-bottom: 1.5rem; }
+        .form-input {
+            width: 100%;
+            background: var(--bg-elev);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 1.25rem 1rem 0.5rem;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        .form-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px var(--accent);
+        }
+        .form-label {
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            font-size: 1rem;
+            color: var(--muted);
+            pointer-events: none;
+            transition: all 0.2s ease;
+        }
+        .form-input:focus ~ .form-label,
+        .form-input:not(:placeholder-shown) ~ .form-label {
+            top: 0.4rem;
+            font-size: 0.7rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* 6. Filter Chips (Radio Style) */
+        .filter-chip {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            padding: 0.6rem 1.5rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .filter-chip:hover {
+            border-color: var(--accent);
+            color: var(--text);
+        }
+        .filter-chip.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #050505;
+            font-weight: 600;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+        .check-icon {
+            width: 0;
+            opacity: 0;
+            transition: all 0.2s ease;
+            transform: scale(0);
+        }
+        .filter-chip.active .check-icon {
+            width: 16px;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* 7. Hero Animations */
+        .hero-ken-burns {
+            animation: kenBurns 20s alternate infinite ease-in-out;
+        }
+        @keyframes kenBurns {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+        
+        /* Utilities */
+        .text-accent { color: var(--accent); }
+        .border-accent { border-color: var(--accent); }
+        .hide-scroll::-webkit-scrollbar { display: none; }
+
+        /* Preloader */
+        #preloader {
+            position: fixed; inset: 0; background: var(--bg); z-index: 10000;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        .loader-text {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            color: var(--accent);
+            animation: pulse 2s infinite;
+        }
+        .preloader-hidden {
+            opacity: 0 !important;
+            visibility: hidden !important;
+        }
+    </style>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        border: 'var(--border)',
+                        accent: 'var(--accent)',
+                        bg: 'var(--bg)',
+                        surface: 'var(--bg-elev)'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="opacity-0 transition-opacity duration-700">
+
+    <!-- 8. Loading Experience -->
+    <div id="preloader">
+        <div class="loader-text">FARRO</div>
+    </div>
+
+    <!-- 5. Background Ambience -->
+    <div class="particles-container" id="particles"></div>
+
+    <!-- 2. Header & Navigation -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 border-b border-transparent">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold tracking-[0.2em] text-white font-serif group relative">
+                FARRO
+                <span class="absolute -bottom-1 left-0 w-full h-[2px] bg-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+            </a>
+
+            <div class="hidden lg:flex items-center gap-10">
+                <a href="#about" class="text-xs uppercase tracking-widest text-gray-300 hover:text-accent transition-colors">Our Story</a>
+                <a href="#menu" class="text-xs uppercase tracking-widest text-gray-300 hover:text-accent transition-colors">Menu</a>
+                <a href="#gallery" class="text-xs uppercase tracking-widest text-gray-300 hover:text-accent transition-colors">Gallery</a>
+                <a href="#reservation-section" class="text-xs uppercase tracking-widest text-gray-300 hover:text-accent transition-colors">Reserve</a>
+                <a href="#contact" class="text-xs uppercase tracking-widest text-gray-300 hover:text-accent transition-colors">Contact</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button onclick="scrollToReservation()" class="hidden lg:inline-flex btn-primary text-xs py-3 px-6">
+                    Book Table
+                </button>
+                <button class="lg:hidden text-white p-2 hover:text-accent transition">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 1. Cinematic Hero Section -->
+    <section id="hero" class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <!-- Video / Image Hybrid with Motion -->
+            <div class="absolute inset-0 bg-black z-10 opacity-40"></div>
+            <div class="hero-ken-burns w-full h-full">
+                <!-- Image Fallback with Error Handling -->
+                <img src="restarent image.jpg" 
+                     class="w-full h-full object-cover" 
+                     alt="Farro Restaurant Ambience"
+                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2070&auto=format&fit=crop';">
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[var(--bg)] via-transparent to-transparent z-20"></div>
+        </div>
+
+        <div class="relative z-30 text-center px-6 max-w-5xl reveal">
+            <p class="text-accent uppercase tracking-[0.4em] text-xs md:text-sm mb-6 font-semibold animate-fade-in-up">
+                Koregaon Park, Pune
+            </p>
+            <h1 class="text-white mb-8 leading-[1.1] font-serif font-medium opacity-0 animate-[fadeInUp_1s_0.4s_forwards]" style="font-size: var(--fs-hero);">
+                Heritage Flavors,<br>Modern Expression.
+            </h1>
+            <p class="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light leading-relaxed opacity-0 animate-[fadeInUp_1s_0.6s_forwards]">
+                Technique-driven plates, seasonal produce, and a room made for lingering.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-6 opacity-0 animate-[fadeInUp_1s_0.8s_forwards]">
+                <button onclick="scrollToReservation()" class="btn-primary">
+                    Reserve Your Table
+                </button>
+                <a href="#menu" class="btn-outline">
+                    Explore the Menu
+                </a>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-accent opacity-60 z-30">
+            <i data-lucide="arrow-down" class="w-6 h-6"></i>
+        </div>
+    </section>
+
+    <main>
+        <!-- 2. About / Narrative Section -->
+        <section id="about" class="relative z-10" style="padding: var(--section-padding) 0;">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+                <!-- Image Group -->
+                <div class="relative reveal">
+                    <div class="absolute -inset-4 border border-accent opacity-20 rounded-lg translate-x-6 translate-y-6 hidden md:block"></div>
+                    <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?q=80&w=1977&auto=format&fit=crop" 
+                         alt="Chef plating food" 
+                         class="relative rounded-lg shadow-2xl w-full object-cover aspect-[4/5] card-hover grayscale hover:grayscale-0 transition-all duration-700">
+                </div>
+                
+                <!-- Content -->
+                <div class="space-y-10 reveal">
+                    <div class="space-y-4">
+                        <h2 class="text-xs font-bold text-accent tracking-[0.3em] uppercase mb-3">Our Story</h2>
+                        <h3 class="text-white font-serif" style="font-size: var(--fs-h1);">
+                            A Journey of Flavors Anchored in Memory
+                        </h3>
+                    </div>
+                    
+                    <div class="h-[1px] w-24 bg-accent"></div>
+
+                    <p class="text-gray-400 text-lg font-light leading-relaxed">
+                        Farro was founded on the principle that dining should be an act of storytelling. Our Middle Eastern-inspired cuisine reimagines heritage recipes through a modern lens, using locally-sourced, high-quality ingredients.
+                    </p>
+
+                    <div class="bg-surface border border-subtle p-8 rounded-xl relative overflow-hidden card-hover">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-accent"></div>
+                        <i data-lucide="quote" class="w-8 h-8 text-accent opacity-40 mb-4"></i>
+                        <p class="text-gray-200 italic font-serif text-lg mb-4 relative z-10 leading-relaxed">
+                            "With FARRO, we've envisioned more than just a restaurant; it is a space of connection and celebration. Every detail is designed to make diners feel part of a story."
+                        </p>
+                        <div class="flex items-center gap-3">
+                            <div class="h-[1px] w-8 bg-accent"></div>
+                            <span class="text-xs font-bold text-white uppercase tracking-wider">Aman Talreja, Co-Founder</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Menu Section -->
+        <section id="menu" class="relative" style="padding: var(--section-padding) 0;">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-xs font-bold text-accent tracking-[0.3em] uppercase mb-4">Signature Plates</h2>
+                    <h3 class="text-white font-serif" style="font-size: var(--fs-h2);">Curated Culinary Offerings</h3>
+                </div>
+
+                <!-- 5. Dietary Filters (Interactive) -->
+                <div class="flex flex-wrap justify-center gap-3 mb-12 reveal">
+                    <button class="filter-chip active" data-filter="all">
+                        <span class="filter-icon"><i data-lucide="check" class="w-3 h-3"></i></span> All
+                    </button>
+                    <button class="filter-chip" data-filter="veg">
+                        <span class="filter-icon"><i data-lucide="check" class="w-3 h-3"></i></span> Vegetarian
+                    </button>
+                    <button class="filter-chip" data-filter="non-veg">
+                        <span class="filter-icon"><i data-lucide="check" class="w-3 h-3"></i></span> Non-Veg
+                    </button>
+                    <button class="filter-chip" data-filter="gf">
+                        <span class="filter-icon"><i data-lucide="check" class="w-3 h-3"></i></span> Gluten Free
+                    </button>
+                </div>
+
+                <!-- Menu Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 reveal-stagger" id="menu-grid">
+                    <!-- Card 1 -->
+                    <div class="bg-surface border border-subtle rounded-xl p-8 hover-lift group relative overflow-hidden flex flex-col" data-category="veg gf">
+                        <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span class="text-[10px] border border-accent text-accent px-2 py-1 rounded uppercase">Veg</span>
+                        </div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-xl font-serif text-white font-medium">Levantine Salad</h4>
+                            <span class="text-accent font-serif italic text-lg">₹590</span>
+                        </div>
+                        <p class="text-muted text-sm leading-relaxed mb-4 flex-grow">Heirloom herbs, pomegranate arils, cracked wheat, lemon-tahini emulsion.</p>
+                        <div class="border-t border-border mt-auto pt-4 flex gap-3">
+                            <span class="p-1 rounded-full bg-white/5 text-muted"><i data-lucide="leaf" class="w-3 h-3"></i></span>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="bg-surface border border-subtle rounded-xl p-8 hover-lift group relative overflow-hidden flex flex-col" data-category="main non-veg">
+                        <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span class="text-[10px] border border-accent text-accent px-2 py-1 rounded uppercase">Non-Veg</span>
+                        </div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-xl font-serif text-white font-medium">Pashtun Kebab</h4>
+                            <span class="text-accent font-serif italic text-lg">₹1150</span>
+                        </div>
+                        <p class="text-muted text-sm leading-relaxed mb-4 flex-grow">Slow-braised lamb, saffron rice, apricot glaze. A house specialty.</p>
+                        <div class="border-t border-border mt-auto pt-4 flex gap-3">
+                            <span class="p-1 rounded-full bg-white/5 text-muted"><i data-lucide="flame" class="w-3 h-3"></i></span>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="bg-surface border border-subtle rounded-xl p-8 hover-lift group relative overflow-hidden flex flex-col" data-category="veg">
+                        <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span class="text-[10px] border border-accent text-accent px-2 py-1 rounded uppercase">Veg</span>
+                        </div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-xl font-serif text-white font-medium">Pistachio Tiramisu</h4>
+                            <span class="text-accent font-serif italic text-lg">₹520</span>
+                        </div>
+                        <p class="text-muted text-sm leading-relaxed mb-4 flex-grow">Silken mascarpone, espresso savoiardi, Middle Eastern pistachio paste.</p>
+                        <div class="border-t border-border mt-auto pt-4 flex gap-3">
+                            <span class="p-1 rounded-full bg-white/5 text-muted"><i data-lucide="coffee" class="w-3 h-3"></i></span>
+                        </div>
+                    </div>
+
+                     <!-- Card 4 -->
+                     <div class="bg-surface border border-subtle rounded-xl p-8 hover-lift group relative overflow-hidden flex flex-col" data-category="main non-veg">
+                        <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span class="text-[10px] border border-accent text-accent px-2 py-1 rounded uppercase">Non-Veg</span>
+                        </div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-xl font-serif text-white font-medium">Kuttanad Seabass</h4>
+                            <span class="text-accent font-serif italic text-lg">₹895</span>
+                        </div>
+                        <p class="text-muted text-sm leading-relaxed mb-4 flex-grow">Crusted seabass, coconut cream, raw mango, spiced puffed rice.</p>
+                         <div class="border-t border-border mt-auto pt-4 flex gap-3">
+                            <span class="p-1 rounded-full bg-white/5 text-muted"><i data-lucide="fish" class="w-3 h-3"></i></span>
+                        </div>
+                    </div>
+
+                    <!-- Card 5 -->
+                    <div class="bg-surface border border-subtle rounded-xl p-8 hover-lift group relative overflow-hidden flex flex-col" data-category="veg">
+                        <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span class="text-[10px] border border-accent text-accent px-2 py-1 rounded uppercase">Veg</span>
+                        </div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-xl font-serif text-white font-medium">Alleppey Cheese</h4>
+                            <span class="text-accent font-serif italic text-lg">₹980</span>
+                        </div>
+                        <p class="text-muted text-sm leading-relaxed mb-4 flex-grow">Cubes of artisanal Indian cottage cheese, coriander pesto, smoked polichathu.</p>
+                         <div class="border-t border-border mt-auto pt-4 flex gap-3">
+                            <span class="p-1 rounded-full bg-white/5 text-muted"><i data-lucide="leaf" class="w-3 h-3"></i></span>
+                        </div>
+                    </div>
+
+                     <!-- Card 6 -->
+                     <div class="bg-surface border border-subtle rounded-xl p-8 hover-lift group relative overflow-hidden flex flex-col" data-category="wine">
+                        <div class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span class="text-[10px] border border-accent text-accent px-2 py-1 rounded uppercase">Wine</span>
+                        </div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-xl font-serif text-white font-medium">Chateau Margaux '15</h4>
+                            <span class="text-accent font-serif italic text-lg">₹850</span>
+                        </div>
+                        <p class="text-muted text-sm leading-relaxed mb-4 flex-grow">A highly-rated Bordeaux with notes of cassis, violet, and cedar.</p>
+                         <div class="border-t border-border mt-auto pt-4 flex gap-3">
+                            <span class="p-1 rounded-full bg-white/5 text-muted"><i data-lucide="wine" class="w-3 h-3"></i></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-16 text-center reveal">
+                    <a href="https://www.zomato.com/pune/farro-koregaon-park/menu" target="_blank" class="btn-outline">
+                        View Full Menu on Zomato
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Live Gallery -->
+        <section id="gallery" style="padding: var(--section-padding) 0;">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-12 reveal">
+                    <div>
+                         <h2 class="text-xs font-bold text-accent tracking-[0.3em] uppercase mb-3">Visual Narrative</h2>
+                         <h3 class="text-white font-serif" style="font-size: var(--fs-h2);">Atmosphere & Artistry</h3>
+                    </div>
+                    <p class="text-muted text-sm md:w-1/3 mt-4 md:mt-0 leading-relaxed">
+                        A curated glimpse into the earthy elegance and culinary detail that defines Farro.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 h-[600px] reveal">
+                    <!-- Masonry Grid with Live Crossfade -->
+                    <div class="col-span-2 row-span-2 relative rounded-xl overflow-hidden group card-hover gallery-tile" data-index="0">
+                        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 absolute inset-0 opacity-100" alt="Interior">
+                        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1974" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 absolute inset-0 opacity-0" alt="Alt">
+                    </div>
+                    <div class="relative rounded-xl overflow-hidden group card-hover gallery-tile" data-index="1">
+                        <img src="p2.jpg" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 absolute inset-0 opacity-100" alt="Food" onerror="this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070'">
+                         <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 absolute inset-0 opacity-0" alt="Food Alt">
+                    </div>
+                    <div class="relative rounded-xl overflow-hidden group card-hover gallery-tile" data-index="2">
+                        <img src="p3.jpg" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 absolute inset-0 opacity-100" alt="Cocktail" onerror="this.src='https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=2070'">
+                         <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=2070" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 absolute inset-0 opacity-0" alt="Cocktail Alt">
+                    </div>
+                    <div class="col-span-2 relative rounded-xl overflow-hidden group card-hover gallery-tile" data-index="3">
+                        <img src="p4.jpg" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 absolute inset-0 opacity-100" alt="Dessert" onerror="this.src='https://images.unsplash.com/photo-1544148103-0773bf10d330?q=80&w=2070'">
+                         <img src="https://images.unsplash.com/photo-1544148103-0773bf10d330?q=80&w=2070" class="w-full h-full object-cover transition duration-700 group-hover:scale-105 absolute inset-0 opacity-0" alt="Dessert Alt">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5.5. Customer Testimonials Section -->
+        <section id="testimonials" class="reveal-item py-16 sm:py-24">
+            <h2 class="text-lg font-light text-gold-accent tracking-[0.2em] uppercase text-center mb-3">Praise</h2>
+            <h3 class="text-5xl font-serif font-medium text-text-light text-center mb-16">
+                What Our Guests Say
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto px-6 lg:px-8">
+                <!-- Testimonial 1 -->
+                <div class="bg-card-bg p-8 rounded-xl border border-gold-accent/20 shadow-xl space-y-4 transition duration-300 hover:shadow-gold-sm hover:-translate-y-1">
+                    <i data-lucide="quote" class="w-8 h-8 text-gold-accent mb-2"></i>
+                    <p class="italic text-gray-300 text-lg font-light">
+                        "An unforgettable evening. The Pashtun Kebab was tender and fragrant, and the modern twist on traditional flavors was truly exceptional. Farro sets a new standard for luxury dining."
+                    </p>
+                    <div class="pt-4 border-t border-gold-accent/10">
+                        <p class="font-semibold text-gold-light">Anya S.</p>
+                        <p class="text-sm text-gray-500">Google Review, Koregaon Park</p>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="bg-card-bg p-8 rounded-xl border border-gold-accent/20 shadow-xl space-y-4 transition duration-300 hover:shadow-gold-sm hover:-translate-y-1">
+                    <i data-lucide="quote" class="w-8 h-8 text-gold-accent mb-2"></i>
+                    <p class="italic text-gray-300 text-lg font-light">
+                        "The atmosphere is pure elegance—intimate yet grand. Every detail, from the teakwood decor to the attentive service, screams refinement. A truly special occasion restaurant."
+                    </p>
+                    <div class="pt-4 border-t border-gold-accent/10">
+                        <p class="font-semibold text-gold-light">Marcus F.</p>
+                        <p class="text-sm text-gray-500">Food Critic, Pune</p>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="bg-card-bg p-8 rounded-xl border border-gold-accent/20 shadow-xl space-y-4 transition duration-300 hover:shadow-gold-sm hover:-translate-y-1">
+                    <i data-lucide="quote" class="w-8 h-8 text-gold-accent mb-2"></i>
+                    <p class="italic text-gray-300 text-lg font-light">
+                        "I hosted a business dinner here, and the private dining room was superb. Flawless execution and discreet service. Highly recommended for corporate events."
+                    </p>
+                    <div class="pt-4 border-t border-gold-accent/10">
+                        <p class="font-semibold text-gold-light">Dr. Helen V.</p>
+                        <p class="text-sm text-gray-500">Local Entrepreneur</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Reservation Form Block (Call-to-Action) -->
+        <section id="reservation-section" class="relative" style="padding: var(--section-padding) 0;">
+             <!-- Ambient Glow Background -->
+             <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-96 bg-accent/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+             <div class="max-w-4xl mx-auto px-6 lg:px-8 reveal relative z-10">
+                <div class="bg-[#0A0A0A]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-10 md:p-20 shadow-2xl relative overflow-hidden group">
+                    
+                    <!-- Elegant Gold Borders -->
+                    <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-accent/50 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-accent/50 to-transparent"></div>
+                    
+                    <div class="text-center mb-14">
+                        <h2 class="text-white font-serif mb-4 tracking-wide" style="font-size: var(--fs-h2);">Secure Your Table</h2>
+                        <p class="text-muted font-light text-lg">
+                            Due to high demand, we recommend booking at least two weeks in advance.
+                        </p>
+                    </div>
+
+                    <form id="inline-reservation-form" class="space-y-10">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <!-- Date Input -->
+                            <div class="relative group">
+                                <input type="date" id="res-date" required class="block py-4 px-0 w-full text-sm text-white bg-transparent border-0 border-b border-gray-700 appearance-none focus:outline-none focus:ring-0 focus:border-accent peer transition-colors">
+                                <label for="res-date" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 uppercase tracking-widest">Date</label>
+                            </div>
+                            <!-- Time Input (No Seconds) -->
+                            <div class="relative group">
+                                <input type="time" id="res-time" required class="block py-4 px-0 w-full text-sm text-white bg-transparent border-0 border-b border-gray-700 appearance-none focus:outline-none focus:ring-0 focus:border-accent peer transition-colors">
+                                <label for="res-time" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 uppercase tracking-widest">Time</label>
+                            </div>
+                            <!-- Guests Input -->
+                            <div class="relative group">
+                                <input type="number" id="res-guests" min="1" max="12" required class="block py-4 px-0 w-full text-sm text-white bg-transparent border-0 border-b border-gray-700 appearance-none focus:outline-none focus:ring-0 focus:border-accent peer transition-colors" placeholder=" ">
+                                <label for="res-guests" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 uppercase tracking-widest">Guests</label>
+                            </div>
+                        </div>
+                        
+                        <!-- Full Name (Full Width) -->
+                        <div class="relative group">
+                            <input type="text" id="res-name" required class="block py-4 px-0 w-full text-sm text-white bg-transparent border-0 border-b border-gray-700 appearance-none focus:outline-none focus:ring-0 focus:border-accent peer transition-colors" placeholder=" ">
+                            <label for="res-name" class="absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-accent peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 uppercase tracking-widest">Full Name</label>
+                        </div>
+
+                        <div class="text-center mt-12">
+                            <button type="submit" class="btn-primary w-full md:w-auto px-16 py-5 text-sm tracking-[0.25em] shadow-gold-glow hover:shadow-gold-hover transition-all duration-500">
+                                Finalize Booking
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div id="form-message" class="mt-8 hidden text-center p-4 rounded bg-green-900/20 text-success border border-success/20 animate-fade-in-up">
+                        <i data-lucide="check-circle" class="inline-block w-5 h-5 mr-2 align-middle"></i>
+                        <span class="align-middle">Reservation request sent successfully via WhatsApp!</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 7. Footer -->
+    <footer id="contact" class="bg-surface border-t border-subtle pt-20 pb-10 mt-20">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+            <div class="space-y-6">
+                <span class="text-2xl font-serif font-bold tracking-[0.15em] text-white">FARRO</span>
+                <p class="text-muted text-sm leading-relaxed">Where heritage ingredients meet modern innovation in Koregaon Park.</p>
+                <div class="flex gap-4 text-accent">
+                    <a href="#" class="hover:text-white transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                    <a href="#" class="hover:text-white transition"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                <h4 class="text-sm font-bold text-accent uppercase tracking-widest">Visit</h4>
+                <p class="text-muted text-sm leading-relaxed">
+                    Plot No. 357/1, Shop No. 1/2<br>
+                    Lane No. 6, Meera Nagar<br>
+                    Koregaon Park, Pune 411001
+                </p>
+                <a href="https://maps.app.goo.gl/6VswZZwcNSeGJHXy8" target="_blank" rel="noopener noreferrer" class="text-xs text-accent hover:underline flex items-center gap-1">
+                    Get Directions <i data-lucide="arrow-up-right" class="w-3 h-3"></i>
+                </a>
+            </div>
+
+            <div class="space-y-4">
+                <h4 class="text-sm font-bold text-accent uppercase tracking-widest">Connect</h4>
+                <p class="text-muted text-sm">+91 99213 18679</p>
+                <p class="text-muted text-sm">info@farro.com</p>
+                <p class="text-muted text-xs pt-2">Open Daily: 7:00 PM - 12:30 AM</p>
+            </div>
+
+            <div class="space-y-4">
+                <h4 class="text-sm font-bold text-accent uppercase tracking-widest">Newsletter</h4>
+                <p class="text-muted text-xs">Occasional notes, no spam.</p>
+                <form class="flex flex-col gap-3" onsubmit="event.preventDefault(); alert('Subscribed!');">
+                    <input type="email" placeholder="Email Address" class="form-input p-3 rounded text-sm">
+                    <button type="submit" class="btn-primary py-3 text-xs w-full">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="border-t border-subtle mt-16 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-muted max-w-7xl mx-auto px-6 lg:px-8">
+            <p>&copy; 2025 Farro Restaurant. All Rights Reserved.</p>
+            <div class="flex gap-6 mt-4 md:mt-0">
+                <a href="#" class="hover:text-white">Privacy</a>
+                <a href="#" class="hover:text-white">Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Logic -->
+    <script>
+        // 1. Init Icons
+        lucide.createIcons();
+        
+        // --- EMAILJS CONFIGURATION ---
+        (function(){
+            // Public Key Updated
+            emailjs.init("xTjHi5tYDUr9nVyY3"); 
+        })();
+
+        // 2. Loading Screen & Fade In
+        function revealPage() {
+            const preloader = document.getElementById('preloader');
+            if (preloader && !preloader.classList.contains('preloader-hidden')) {
+                preloader.classList.add('preloader-hidden');
+                document.body.classList.add('loaded');
+                setTimeout(() => {
+                    if(preloader) preloader.remove();
+                }, 500);
+                checkScroll();
+            }
+        }
+
+        // Try regular load
+        window.addEventListener('load', revealPage);
+        setTimeout(revealPage, 2000);
+
+        // 3. Scroll Reveal & Navbar Glass
+        const revealElements = document.querySelectorAll('.reveal, .reveal-stagger');
+        const navbar = document.getElementById('navbar');
+
+        function checkScroll() {
+            const triggerBottom = window.innerHeight * 0.85;
+            if (window.scrollY > 50) {
+                navbar.classList.add('nav-glass', 'shadow-lg');
+                navbar.classList.remove('border-transparent', 'py-6');
+                navbar.classList.add('border-white/5', 'py-4');
+            } else {
+                navbar.classList.remove('nav-glass', 'shadow-lg', 'border-white/5', 'py-4');
+                navbar.classList.add('border-transparent', 'py-6');
+            }
+            revealElements.forEach(el => {
+                const boxTop = el.getBoundingClientRect().top;
+                if (boxTop < triggerBottom) {
+                    el.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', checkScroll);
+
+        // 4. Background Particles
+        const particlesContainer = document.getElementById('particles');
+        if (particlesContainer) {
+            for(let i = 0; i < 20; i++) {
+                const p = document.createElement('div');
+                p.classList.add('particle');
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.top = Math.random() * 100 + 'vh';
+                const size = Math.random() * 3 + 1;
+                p.style.width = size + 'px';
+                p.style.height = size + 'px';
+                p.style.animationDuration = (Math.random() * 15 + 20) + 's'; 
+                p.style.animationDelay = -(Math.random() * 20) + 's';
+                particlesContainer.appendChild(p);
+            }
+        }
+
+        // 5. Filter Logic
+        const chips = document.querySelectorAll('.filter-chip');
+        const cards = document.querySelectorAll('.bg-surface[data-category]');
+        chips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                chips.forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                const filter = chip.dataset.filter;
+                cards.forEach(card => {
+                    const category = card.dataset.category;
+                    if (filter === 'all' || category.includes(filter)) {
+                        card.parentElement.style.display = 'block'; 
+                        requestAnimationFrame(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0) scale(1)';
+                        });
+                    } else {
+                         card.style.opacity = '0';
+                         card.style.transform = 'translateY(10px) scale(0.95)';
+                         setTimeout(() => {
+                            card.parentElement.style.display = 'none'; 
+                         }, 300);
+                    }
+                });
+            });
+        });
+
+        // 6. Reservation Logic (EmailJS + WhatsApp Fallback)
+        function scrollToReservation() {
+            const section = document.getElementById('reservation-section');
+            if (section) section.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function openReservationModal() { 
+            const modal = document.getElementById('reservation-modal');
+            if (modal) modal.classList.remove('hidden'); 
+        }
+        
+        function closeReservationModal() { 
+            const modal = document.getElementById('reservation-modal');
+            if (modal) modal.classList.add('hidden'); 
+        }
+
+
+        function sendReservation(prefix) {
+            const dateEl = document.getElementById(`${prefix}-date`);
+            const timeEl = document.getElementById(`${prefix}-time`);
+            const guestsEl = document.getElementById(`${prefix}-guests`);
+            const nameEl = document.getElementById(`${prefix}-name`);
+            const emailEl = document.getElementById(`${prefix}-email`); 
+
+            const date = dateEl ? dateEl.value : '';
+            const time = timeEl ? timeEl.value : '';
+            const guests = guestsEl ? guestsEl.value : '';
+            const name = nameEl ? nameEl.value : '';
+            const email = emailEl ? emailEl.value : '';
+
+            if(!date || !time || !guests || !name) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+
+            const submitBtn = document.querySelector(`#${prefix === 'modal' ? 'modal-reservation-form' : 'inline-reservation-form'} button[type="submit"]`);
+            const originalText = submitBtn ? submitBtn.innerText : "Book";
+            if (submitBtn) {
+                submitBtn.innerText = "Sending...";
+                submitBtn.disabled = true;
+            }
+
+            // --- EMAIL PARAMETERS ---
+            const templateParams = {
+                to_email: "shivakandula456@gmail.com", 
+                from_name: name,
+                from_email: email,
+                date: date,
+                time: time,
+                guests: guests,
+                message_html: `New reservation request for ${guests} people on ${date} at ${time}.`
+            };
+
+            // --- SEND EMAIL ---
+            // Updated with provided credentials
+            emailjs.send('service_zdrj66q', 'template_cdo6i0l', templateParams)
+                .then(function() {
+                    // SUCCESS
+                    const msgId = prefix === 'modal' ? 'modal-reservation-message' : 'form-message';
+                    const messageEl = document.getElementById(msgId);
+                    
+                    if (messageEl) {
+                        messageEl.innerHTML = `<i data-lucide="check-circle" class="inline-block w-5 h-5 mr-2"></i> Request sent to Farro team! Check your email.`;
+                        messageEl.classList.remove('hidden');
+                        lucide.createIcons(); // re-init icons for the new check-circle
+                    }
+
+                    if (submitBtn) submitBtn.innerText = "Confirmed";
+                    
+                    setTimeout(() => {
+                         if (messageEl) messageEl.classList.add('hidden');
+                         if (submitBtn) {
+                             submitBtn.disabled = false;
+                             submitBtn.innerText = originalText;
+                         }
+                         if(prefix === 'modal') closeReservationModal();
+                    }, 5000);
+
+                }, function(error) {
+                    // ERROR / FALLBACK TO WHATSAPP
+                    console.log('EmailJS FAILED...', error);
+                    
+                    // Fallback to WhatsApp
+                    const phoneNumber = "919921318679";
+                    const message = `*New Reservation Request*%0A%0A*Name:* ${name}%0A*Date:* ${date}%0A*Time:* ${time}%0A*Guests:* ${guests}%0A%0APlease confirm availability.`;
+                    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+                    
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerText = originalText;
+                    }
+                });
+        }
+
+        // Safe Event Listener Attachment
+        const modalForm = document.getElementById('modal-reservation-form');
+        if (modalForm) {
+            modalForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                sendReservation('modal');
+            });
+        }
+
+        const inlineForm = document.getElementById('inline-reservation-form');
+        if (inlineForm) {
+            inlineForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                sendReservation('res'); // inline IDs start with res-
+            });
+        }
+
+        // 7. Live Gallery Crossfade
+        const galleryTiles = document.querySelectorAll('.gallery-tile');
+        function swapRandomImage() {
+            if (galleryTiles.length === 0) return;
+            const galleryImages = [
+                "p1.jpg", "p2.jpg", "p3.jpg", "p4.jpg", "restarent image.jpg",
+                "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1974",
+                "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2070",
+                "https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?q=80&w=2070"
+            ];
+            const randomIndex = Math.floor(Math.random() * galleryTiles.length);
+            const tile = galleryTiles[randomIndex];
+            const imgs = tile.querySelectorAll('img');
+            if (imgs.length < 2) return;
+            
+            const hiddenImg = imgs[0].style.opacity === '0' || imgs[0].style.opacity === '' ? imgs[0] : imgs[1];
+            const visibleImg = hiddenImg === imgs[0] ? imgs[1] : imgs[0];
+            const newSrc = galleryImages[Math.floor(Math.random() * galleryImages.length)];
+            
+            hiddenImg.src = newSrc;
+            hiddenImg.onload = () => {
+                hiddenImg.style.opacity = '1';
+                visibleImg.style.opacity = '0';
+            };
+        }
+        setInterval(swapRandomImage, 4000);
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    </script>
+</body>
+</html>
